@@ -1,4 +1,5 @@
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 import unittest
 
 class NewVisitorTest (unittest.TestCase):
@@ -13,9 +14,8 @@ class NewVisitorTest (unittest.TestCase):
     def test_can_start_a_list_and_retrieve_it_later(self):
         self.browser.get('http://localhost:8000')
         self.assertIn ('To-Do',self.browser.title)
-        header_text = self.browser.find_elements_by_tag_name ('h1').text
+        header_text = self.browser.find_element_by_tag_name('h1').text
         self.assertIn('To-Do', header_text)
-        self.fail('Finish the test!')
         #She is invited to enter a to-do item straight away
         inputbox=self.browser.find_element_by_id('id_new_item')
         self.assertEqual(
@@ -29,10 +29,11 @@ class NewVisitorTest (unittest.TestCase):
         #"1:Buy pacock feather" as an item in a to-do list table
         inputbox.send_keys(Keys.ENTER)
 
-        table = self.browser.find_elements_by_id('id_list_table')
-        rows = table.find_element_by_id('tr')
-        self.asserTrue(
-            any(row.text == '1:Buy pacock feather' for row in rows)
+        table = self.browser.find_element_by_id('id_list_table')
+        rows = table.find_elements_by_id('tr')
+        self.assertTrue(
+            any(row.text == '1:Buy pacock feather' for row in rows),
+            "New to-do item did not apper in table"
         )
 
         #There is a still a text box inviting her to add another item. She enters
