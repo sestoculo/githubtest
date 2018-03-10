@@ -3,51 +3,79 @@ from selenium.webdriver.common.keys import Keys
 import unittest
 import time
 
+
 class NewVisitorTest (unittest.TestCase):
 
-    def setUp (self):
+    def setUp(self):
         self.browser = webdriver.Firefox()
         self.browser.implicitly_wait(3)
 
-#The tearDown method will get called after every test method. This is a place to do all cleanup actions. In the current method, the browser window is closed. You can also call quit method instead of close. The quit will exit the entire browser, whereas close will close a tab, but if it is the only tab opened, by default most browser will exit entirely.:
+# The tearDown method will get called after every test method. This is a place to do all cleanup actions. In the current method, the browser window is closed. You can also call quit method instead of close. The quit will exit the entire browser, whereas close will close a tab, but if it is the only tab opened, by default most browser will exit entirely.:
 
     def tearDown(self):
         self.browser.quit()
+
+# Only test wich begin with test_ will get run as test, we can use other method for our own purpose
+
+
+def check_for_row_in_list_table(self, row_text):
+    table = self.browser.find_element_by_id('id_list_table')
+    rows = table.find_element_by_tag_name('tr')
+    self.assertIn(row_text, [row.text for row in rows])
+
+# http://selenium-python.readthedocs.io/getting-started.html
+# The driver.get method will navigate to a page given by the URL. WebDriver will wait until the page has fully loaded (that is, the “onload” event has fired) before returning control to your test or script. It’s worth noting that if your page uses a lot of AJAX on load then WebDriver may not know when it has completely loaded.:
+
+
+def test_can_start_a_list_and_retrieve_it_later(self):
+    self.browser.get('http://localhost:8000')
+    self.assertIn('To-Do', self.browser.title)
+    header_text = self.browser.find_element_by_tag_name('h1').text
+    self.assertIn('To-Do', header_text)
+
+
+    # She is invited to enter a to-do item straight away
+    inputbox = self.browser.find_element_by_id('id_new_item')
+    self.assertEqual(
+        inputbox.get_attribute('placeholder'),
+        'Enter a to-do item'
+    )
+
+
+    # She types "Buy peacock feathers" into a text box (Edith's hobby is typing fly-fishing luers)
+    inputbox.send_keys('Buy peacock feathers')
+
+    # When sho hits enter, the page updates, and now the page lists
+    #"1:Buy pacock feather" as an item in a to-do list table
+    inputbox.send_keys(Keys.ENTER)
+    time.sleep(1)
     
-#http://selenium-python.readthedocs.io/getting-started.html
-#The driver.get method will navigate to a page given by the URL. WebDriver will wait until the page has fully loaded (that is, the “onload” event has fired) before returning control to your test or script. It’s worth noting that if your page uses a lot of AJAX on load then WebDriver may not know when it has completely loaded.:
+    self.check_for_row_in_list_table('1: Buy peacock feathers')
 
-    def test_can_start_a_list_and_retrieve_it_later(self):
-        self.browser.get('http://localhost:8000')
-        self.assertIn ('To-Do',self.browser.title)
-        header_text = self.browser.find_element_by_tag_name('h1').text
-        self.assertIn('To-Do', header_text)
-        #She is invited to enter a to-do item straight away
-        inputbox=self.browser.find_element_by_id('id_new_item')
-        self.assertEqual(
-            inputbox.get_attribute('placeholder'),
-            'Enter a to-do item'
-        )
-        #She types "Buy peacock feathers" into a text box (Edith's hobby is typing fly-fishing luers)
-        inputbox.send_keys('Buy peacock feathers')
+    # There is a still a text box inviting her to add another item. She enters
+    #"Use peacock feathers to make a fly" (Edith is very methodical)    
+    inputbox = self.browser.find_element_by_id('id_new_item')
+    inputbox.send_keys('Use peacock feather to make a fly')
+    time.sleep(1)
+    self.check_for_row_in_list_table('1: Buy peacock feather')
+    self.check_for_row_in_list_table('2: Use peacock feather to make a fly')
+    self.fail('Finish the test!')
 
-        #When sho hits enter, the page updates, and now the page lists
-        #"1:Buy pacock feather" as an item in a to-do list table
-        inputbox.send_keys(Keys.ENTER)
-        #time.sleep(10)
-
-        table = self.browser.find_element_by_id('id_list_table')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertIn('1: Buy peacock feather', [row.text for row in rows])
-        self.assertIn('2: Use peacock feather to make a fly',[row.text for row in rows])
-        
-        
-
-        #There is a still a text box inviting her to add another item. She enters
-        #"Use peacock feathers to make a fly" (Edith is very methodical)
-        self.fail('Finish the test!')
 
 if __name__ == '__main__':
     unittest.main(warnings='ignore')
 
 
+
+'''     table = self.browser.find_element_by_id('id_list_table')
+    rows = table.find_elements_by_tag_name('tr')
+    self.assertIn('1: Buy peacock feather', [row.text for row in rows])
+    self.assertIn('2: Use peacock feather to make a fly',
+                  [row.text for row in rows]) '''
+
+
+'''    
+    inputbox.send_keys('Buy peacock feathers')
+    inputbox.send_keys(Keys.ENTER) '''
+
+    #The page updates again, and show both items on her list
