@@ -18,48 +18,48 @@ class NewVisitorTest (unittest.TestCase):
 # Only test wich begin with test_ will get run as test, we can use other method for our own purpose
 
 
-def check_for_row_in_list_table(self, row_text):
-    table = self.browser.find_element_by_id('id_list_table')
-    rows = table.find_element_by_tag_name('tr')
-    self.assertIn(row_text, [row.text for row in rows])
+    def check_for_row_in_list_table(self, row_text):
+        table = self.browser.find_element_by_id('id_list_table')
+        rows = table.find_element_by_tag_name('tr')
+        self.assertIn(row_text, [row.text for row in rows])
 
-# http://selenium-python.readthedocs.io/getting-started.html
-# The driver.get method will navigate to a page given by the URL. WebDriver will wait until the page has fully loaded (that is, the “onload” event has fired) before returning control to your test or script. It’s worth noting that if your page uses a lot of AJAX on load then WebDriver may not know when it has completely loaded.:
-
-
-def test_can_start_a_list_and_retrieve_it_later(self):
-    self.browser.get('http://localhost:8000')
-    self.assertIn('To-Do', self.browser.title)
-    header_text = self.browser.find_element_by_tag_name('h1').text
-    self.assertIn('To-Do', header_text)
+    # http://selenium-python.readthedocs.io/getting-started.html
+    # The driver.get method will navigate to a page given by the URL. WebDriver will wait until the page has fully loaded (that is, the “onload” event has fired) before returning control to your test or script. It’s worth noting that if your page uses a lot of AJAX on load then WebDriver may not know when it has completely loaded.:
 
 
-    # She is invited to enter a to-do item straight away
-    inputbox = self.browser.find_element_by_id('id_new_item')
-    self.assertEqual(
-        inputbox.get_attribute('placeholder'),
-        'Enter a to-do item'
-    )
+    def test_can_start_a_list_and_retrieve_it_later(self):
+        self.browser.get('http://localhost:8000')
+        self.assertIn('To-Do', self.browser.title)
+        header_text = self.browser.find_element_by_tag_name('h1').text
+        self.assertIn('To-Do', header_text)
 
 
-    # She types "Buy peacock feathers" into a text box (Edith's hobby is typing fly-fishing luers)
-    inputbox.send_keys('Buy peacock feathers')
+        # She is invited to enter a to-do item straight away
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        self.assertEqual(
+            inputbox.get_attribute('placeholder'),
+            'Enter a to-do item'
+        )
 
-    # When sho hits enter, the page updates, and now the page lists
-    #"1:Buy pacock feather" as an item in a to-do list table
-    inputbox.send_keys(Keys.ENTER)
-    time.sleep(1)
-    
-    self.check_for_row_in_list_table('1: Buy peacock feathers')
 
-    # There is a still a text box inviting her to add another item. She enters
-    #"Use peacock feathers to make a fly" (Edith is very methodical)    
-    inputbox = self.browser.find_element_by_id('id_new_item')
-    inputbox.send_keys('Use peacock feather to make a fly')
-    time.sleep(1)
-    self.check_for_row_in_list_table('1: Buy peacock feather')
-    self.check_for_row_in_list_table('2: Use peacock feather to make a fly')
-    self.fail('Finish the test!')
+        # She types "Buy peacock feathers" into a text box (Edith's hobby is typing fly-fishing luers)
+        inputbox.send_keys('Buy peacock feathers')
+
+        # When sho hits enter, the page updates, and now the page lists
+        #"1:Buy pacock feather" as an item in a to-do list table
+        inputbox.send_keys(Keys.ENTER)
+        time.sleep(1)
+        
+        self.check_for_row_in_list_table('1: Buy peacock feathers')
+
+        # There is a still a text box inviting her to add another item. She enters
+        #"Use peacock feathers to make a fly" (Edith is very methodical)    
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox.send_keys('Use peacock feather to make a fly')
+        time.sleep(1)
+        self.check_for_row_in_list_table('1: Buy peacock feather')
+        self.check_for_row_in_list_table('2: Use peacock feather to make a fly')
+        self.fail('Finish the test!')
 
 
 if __name__ == '__main__':
@@ -78,4 +78,4 @@ if __name__ == '__main__':
     inputbox.send_keys('Buy peacock feathers')
     inputbox.send_keys(Keys.ENTER) '''
 
-    #The page updates again, and show both items on her list
+ #The page updates again, and show both items on her list
