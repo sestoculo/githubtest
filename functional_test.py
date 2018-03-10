@@ -9,9 +9,14 @@ class NewVisitorTest (unittest.TestCase):
         self.browser = webdriver.Firefox()
         self.browser.implicitly_wait(3)
 
+#The tearDown method will get called after every test method. This is a place to do all cleanup actions. In the current method, the browser window is closed. You can also call quit method instead of close. The quit will exit the entire browser, whereas close will close a tab, but if it is the only tab opened, by default most browser will exit entirely.:
+
     def tearDown(self):
         self.browser.quit()
     
+#http://selenium-python.readthedocs.io/getting-started.html
+#The driver.get method will navigate to a page given by the URL. WebDriver will wait until the page has fully loaded (that is, the “onload” event has fired) before returning control to your test or script. It’s worth noting that if your page uses a lot of AJAX on load then WebDriver may not know when it has completely loaded.:
+
     def test_can_start_a_list_and_retrieve_it_later(self):
         self.browser.get('http://localhost:8000')
         self.assertIn ('To-Do',self.browser.title)
@@ -44,3 +49,5 @@ class NewVisitorTest (unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main(warnings='ignore')
+
+
