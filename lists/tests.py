@@ -5,7 +5,7 @@ from lists.views import home_page
 from django.template.loader import render_to_string
 # Create your tests here.
 # Adding for testing model and database ORM (Object-Relation Maper)
-from lists.models import item
+from lists.models import Item
 
 class HomePageTest (TestCase):
     
@@ -36,20 +36,20 @@ class HomePageTest (TestCase):
 class ItemModelTest (TestCase):
     def test_saving_and_retrieving_items(self):
         first_item = Item()
-        first_item = 'The first (ever) list item'
+        first_item.text = 'The first (ever) list item'
         first_item.save()
         
         second_item = Item()
-        second_item = 'The the second'
+        second_item.text = 'The the second'
         second_item.save()
 
-        saved_items = Item.Object.All()
+        saved_items =Item.objects.all()
         self.assertEqual (saved_items.count(),2)
 
         first_saved_item = saved_items[0]
         second_saved_item = saved_items[1]
         self.assertEqual (first_saved_item.text, 'The first (ever) list item' )
-        self.assertEqual (second_saved_item.text, 'Item the second' )
+        self.assertEqual (second_saved_item.text, 'The the second' )
 
 
 
